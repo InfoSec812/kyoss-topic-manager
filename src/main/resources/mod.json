@@ -1,7 +1,7 @@
 {
 
   // JavaScript verticle
-  //"main": "main_verticle.js",
+  "main": "main_verticle.js",
 
 
   // If your module is going to be registered in the Vert.x module registry you will also need the following
