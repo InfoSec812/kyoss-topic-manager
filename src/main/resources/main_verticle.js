@@ -25,6 +25,7 @@ var periodicTimer = timer.setPeriodic(1000, function(periodicTimer) {
 });
 
 // Create a handler to serve static content
+// NOTE: This could also be replaced with a templating system!!!
 rm.allWithRegEx('\/.*\.(js|html|htm|css|png|gif|jpg|jpeg|JS|HTML|HTM|CSS|PNG|GIF|JPG|JPEG)[?\w\d=_-]*', function(req) {
     var staticFile = req.path();
     req.response.sendFile('static'+staticFile);
@@ -41,8 +42,8 @@ server.requestHandler(rm);
 // Create a SockJS server on top of the HTTP Server and tie it to the Vert.x event bus.
 var sockJSServer = vertx.createSockJSServer(server);
 sockJSServer.bridge({prefix : '/eventbus'},
-        [/* an array of eventbus addresses allowed to be accessed from the client */],
-        [/* an array of eventbus addresses allowed to be accessed from the client */{address: 'client.time.update'}] );
+        [/* an array of message filters allowed to be received from the client */],
+        [/* an array of message filters allowed to be sent to the client */{address: 'client.time.update'}] );
 
 // Start the server listening for requests!
 server.listen(8080);

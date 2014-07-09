@@ -8,15 +8,23 @@
     <script>
         var eventBusPath = location.origin+'/eventbus';
         var eventbus = null;
+        var reconnectDelay = 1000;
 
-        function connectEventBus() {
+        function connectEventBus(delay) {
             eventbus = new vertx.EventBus(eventBusPath);
 
+            reconnectDelay+=1000;
+            if (reconnectDelay>5000) {
+                reconnectDelay=5000;
+            }
+
             eventbus.onclose = function() {
-                window.setTimeout(connectEventBus(), 1000);
+                window.setTimeout(connectEventBus(reconnectDelay), reconnectDelay);
             }
 
             eventbus.onopen = function() {
+                reconnectDelay=1000;
+
                 // Register an event handler to accept events from the server via the event bus
                 eventbus.registerHandler('client.time.update', function(message) {
                     var timeDiv = document.getElementById('timediv');
@@ -25,7 +33,7 @@
             }
         }
 
-        connectEventBus();
+        connectEventBus(reconnectDelay);
     </script>
 </head>
 <body>
