@@ -26,9 +26,15 @@
                 reconnectDelay=1000;
 
                 // Register an event handler to accept events from the server via the event bus
-                eventbus.registerHandler('client.time.update', function(message) {
-                    var timeDiv = document.getElementById('timediv');
-                    timeDiv.innerHTML = message;
+                eventbus.registerHandler('server.client.js.update', function(message) {
+                    var timeDiv = document.getElementById('javascripttime');
+                    timeDiv.innerHTML = 'Time from JS verticle: '+message;
+                });
+
+                // Register an event handler to accept events from the server via the event bus
+                eventbus.registerHandler('server.client.php.update', function(message) {
+                    var timeDiv = document.getElementById('phptime');
+                    timeDiv.innerHTML = 'Time from PHP verticle: '+message;
                 });
             }
         }
@@ -38,6 +44,7 @@
 </head>
 <body>
     <h1>Hello Vert.x!!!</h1>
-    <div id="timediv"></div>
+    <div id="javascripttime"></div>
+    <div id="phptime"></div>
 </body>
 </html>

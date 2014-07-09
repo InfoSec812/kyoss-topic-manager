@@ -13,6 +13,8 @@ var logger = container.logger;
 var eventBus = vertx.eventBus;
 var timer = vertx.timer;
 
+container.deployVerticle("test_php_verticle.php");
+
 // Create an HTTP server
 var server = vertx.createHttpServer();
 
@@ -23,8 +25,8 @@ var rm = new vertx.RouteMatcher();
 // on the server.
 var periodicTimer = timer.setPeriodic(1000, function(periodicTimer) {
     var currentTime = new java.util.Date();
-    logger.info("Sending update to client.");
-    eventBus.publish('client.time.update', currentTime.toString());
+    logger.info("Sending JS update to client.");
+    eventBus.publish('server.client.js.update', currentTime.toString());
 });
 
 // Create a handler to serve static content
@@ -45,8 +47,8 @@ server.requestHandler(rm);
 // Create a SockJS server on top of the HTTP Server and tie it to the Vert.x event bus.
 var sockJSServer = vertx.createSockJSServer(server);
 sockJSServer.bridge({prefix : '/eventbus'},
-        [/* an array of message filters allowed to be received from the client */],
-        [/* an array of message filters allowed to be sent to the client */{address: 'client.time.update'}] );
+        [], // an array of message filters allowed to be received from the client
+        [{address: 'server.client.js.update'}, {address: 'server.client.php.update'}] ); // an array of message filters allowed to be sent to the client
 
 // Start the server listening for requests!
 server.listen(8080);
