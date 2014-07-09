@@ -14,6 +14,16 @@ var server = vertx.createHttpServer();
 
 var rm = new vertx.RouteMatcher();
 
+var eventBus = vertx.eventBus;
+
+var timer = vertx.timer;
+
+var periodicTimer = timer.setPeriodic(1000, function(periodicTimer) {
+    var currentTime = new java.util.Date();
+    logger.info("Sending update to client.");
+    eventBus.publish('client.time.update', currentTime.toString())
+});
+
 // Create a handler to serve static content
 rm.allWithRegEx('\/.*\.(js|html|htm|css|png|gif|jpg|jpeg|JS|HTML|HTM|CSS|PNG|GIF|JPG|JPEG)[?\w\d=_-]*', function(req) {
     var staticFile = req.path();
@@ -32,7 +42,7 @@ server.requestHandler(rm);
 var sockJSServer = vertx.createSockJSServer(server);
 sockJSServer.bridge({prefix : '/eventbus'},
         [/* an array of eventbus addresses allowed to be accessed from the client */],
-        [/* an array of eventbus addresses allowed to be accessed from the client */] );
+        [/* an array of eventbus addresses allowed to be accessed from the client */{address: 'client.time.update'}] );
 
 // Start the server listening for requests!
 server.listen(8080);

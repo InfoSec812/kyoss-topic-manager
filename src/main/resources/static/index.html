@@ -3,8 +3,40 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>KYOSS Topic Manager</title>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.4.min.js"></script>
+    <script src='deps/vertxbus-2.1.js'></script>
+    <script>
+        var eventBusPath = location.origin+'/eventbus';
+        var eventbus = new vertx.EventBus(eventBusPath);
+
+        // Need some help from the JavaScript gurus in order to figure out
+        // how best to handle the reconnects when the web socket drops.
+        var registerHandlers = function() {
+            // Register an event handler to accept events from the server via the event bus
+            eventbus.registerHandler('client.time.update', function(message) {
+                var timeDiv = document.getElementById('timediv');
+                timeDiv.innerHTML = message;
+            });
+        }
+
+        function reconnect() {
+            eventbus = new vertx.EventBus(eventBusPath);
+            eventbus.onopen = function() {
+                registerHandlers.call;
+            }
+        }
+
+        eventbus.onclose = function() {
+            window.setTimeout(reconnect(), 1000);
+        }
+
+        // Wait 1000ms for the page to load and render, then register the event handler
+        // There MUST be a better solution to this?!?!
+        window.setTimeout(registerHandlers, 1000);
+    </script>
 </head>
 <body>
     <h1>Hello Vert.x!!!</h1>
+    <div id="timediv"></div>
 </body>
 </html>
