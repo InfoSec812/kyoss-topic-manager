@@ -9,7 +9,7 @@
         var eventBusPath = location.origin+'/eventbus';
         var eventbus = new vertx.EventBus(eventBusPath);
 
-        // Need some help from the JavaScript gurus in order to figure out
+        // TODO: Need some help from the JavaScript gurus in order to figure out
         // how best to handle the reconnects when the web socket drops.
         var registerHandlers = function() {
             // Register an event handler to accept events from the server via the event bus
