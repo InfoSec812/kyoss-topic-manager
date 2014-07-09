@@ -1,5 +1,6 @@
 <?php
 
+// Woohoo!!! PHP Verticle!!
 
 $id = Vertx::setPeriodic(1000, function($id) {
     $eventBus = Vertx::eventBus();
