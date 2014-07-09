@@ -7,32 +7,25 @@
     <script src='deps/vertxbus-2.1.js'></script>
     <script>
         var eventBusPath = location.origin+'/eventbus';
-        var eventbus = new vertx.EventBus(eventBusPath);
+        var eventbus = null;
 
-        // TODO: Need some help from the JavaScript gurus in order to figure out
-        // how best to handle the reconnects when the web socket drops.
-        var registerHandlers = function() {
-            // Register an event handler to accept events from the server via the event bus
-            eventbus.registerHandler('client.time.update', function(message) {
-                var timeDiv = document.getElementById('timediv');
-                timeDiv.innerHTML = message;
-            });
-        }
-
-        function reconnect() {
+        function connectEventBus() {
             eventbus = new vertx.EventBus(eventBusPath);
+
+            eventbus.onclose = function() {
+                window.setTimeout(connectEventBus(), 1000);
+            }
+
             eventbus.onopen = function() {
-                registerHandlers.call;
+                // Register an event handler to accept events from the server via the event bus
+                eventbus.registerHandler('client.time.update', function(message) {
+                    var timeDiv = document.getElementById('timediv');
+                    timeDiv.innerHTML = message;
+                });
             }
         }
 
-        eventbus.onclose = function() {
-            window.setTimeout(reconnect(), 1000);
-        }
-
-        // Wait 1000ms for the page to load and render, then register the event handler
-        // There MUST be a better solution to this?!?!
-        window.setTimeout(registerHandlers, 1000);
+        connectEventBus();
     </script>
 </head>
 <body>
