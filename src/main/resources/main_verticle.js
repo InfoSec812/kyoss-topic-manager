@@ -3,25 +3,28 @@
  * All other verticles must be loaded programmatically from this verticle.
  */
 
-var vertx = require('vertx')
-var console = require('vertx/console')
-var container = require('vertx/container')
+// Some boilerplate
+var vertx = require('vertx');
+var console = require('vertx/console');
+var container = require('vertx/container');
 
 var config = container.config;
 var logger = container.logger;
-
-var server = vertx.createHttpServer();
-
-var rm = new vertx.RouteMatcher();
-
 var eventBus = vertx.eventBus;
-
 var timer = vertx.timer;
 
+// Create an HTTP server
+var server = vertx.createHttpServer();
+
+// Create a RouteMatcher which allows us to map URLs to handlers
+var rm = new vertx.RouteMatcher();
+
+// Start a periodic event which sends a message containing the current time 
+// on the server.
 var periodicTimer = timer.setPeriodic(1000, function(periodicTimer) {
     var currentTime = new java.util.Date();
     logger.info("Sending update to client.");
-    eventBus.publish('client.time.update', currentTime.toString())
+    eventBus.publish('client.time.update', currentTime.toString());
 });
 
 // Create a handler to serve static content
