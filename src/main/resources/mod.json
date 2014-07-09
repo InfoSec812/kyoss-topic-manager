@@ -1,16 +1,11 @@
 {
 
-  // JavaScript verticle
   "main": "main_verticle.js",
 
-
-  // If your module is going to be registered in the Vert.x module registry you will also need the following
-  // mandatory fields
   "description":"An application to allow for voting on topics to be presented at KYOSS meetings.",
   "licenses": ["The Apache Software License Version 2.0"],
   "author": "KYOSS",
 
-  // Optional fields
   "developers": ["Alan Blount", "Deven Phillips", "Jeff Squyres", "John Hicks", "Eric Lathrop", "Wes Reisz" ,"Chris Rockwell", "Ryan Stortz", "Ryan Hartlage" ,"Liam Boyle"],
   "keywords": ["javascript", "php", "kyoss", "oss", "kentucky", "louisville", "voting", "reactive", "agile"],
   "homepage": "http://kyoss.org/",
